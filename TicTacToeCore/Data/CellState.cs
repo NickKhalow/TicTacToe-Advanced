@@ -1,8 +1,9 @@
-namespace TicTacToe.Core;
-
-public enum CellState
+namespace TicTacToeCore.Data
 {
-    Free,
-    OwnedX,
-    OwnedY
+    public enum CellState
+    {
+        Free,
+        OwnedX,
+        OwnedY
+    }
 }

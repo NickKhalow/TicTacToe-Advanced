@@ -1,25 +1,25 @@
-using TicTacToeCore;
 using TicTacToeCore.Data;
 
 
-namespace TicTacToe.Core.Field;
-
-public interface IField : IDataDriven<FieldData>
+namespace TicTacToeCore.Field
 {
-    int Size { get; }
+    public interface IField : IDataDriven<FieldData>
+    {
+        int Size { get; }
 
 
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="InvalidOperationException"></exception>
-    void MakeTurn(CellState state, Position position);
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        void MakeTurn(CellState state, Position position);
 
 
-    bool CheckGameFinished(out FinishType? winner);
+        bool CheckGameFinished(out FinishType? winner);
 
 
-    CellState GetAt(Position position);
+        CellState GetAt(Position position);
 
 
-    CellState[,] ToArray();
+        CellState[,] ToArray();
+    }
 }

@@ -1,15 +1,13 @@
-using TicTacToe.Core;
-
-
-namespace TicTacToeCore.Data;
-
-public struct FieldData : IData
+namespace TicTacToeCore.Data
 {
-    public CellState[,] Cells { get; } = { };
-
-
-    public FieldData(CellState[,] cells)
+    public struct FieldData : IData
     {
-        Cells = cells;
+        public CellState[,] Cells { get; }
+
+
+        public FieldData(CellState[,] cells)
+        {
+            Cells = cells;
+        }
     }
 }

@@ -1,5 +1,5 @@
-using TicTacToe.Core;
-using TicTacToe.Core.Field;
+using TicTacToeCore.Data;
+using TicTacToeCore.Field;
 using Xunit;
 
 

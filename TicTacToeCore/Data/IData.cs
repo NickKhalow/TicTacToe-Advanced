@@ -1,6 +1,7 @@
-namespace TicTacToeCore.Data;
-
-public interface IData
+namespace TicTacToeCore.Data
 {
+    public interface IData
+    {
     
+    }
 }

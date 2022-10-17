@@ -1,19 +1,20 @@
-using TicTacToeCore;
+using System;
 using TicTacToeCore.Data;
 
 
-namespace TicTacToe.Core.Player;
-
-public interface IPlayer : IDataDriven<PlayerData>
+namespace TicTacToeCore.Player
 {
-    string Name { get; }
+    public interface IPlayer : IDataDriven<PlayerData>
+    {
+        string Name { get; }
 
 
-    event Action<Position> RequestTurnAt;
+        event Action<Position> RequestTurnAt;
 
 
-    void MakeTurn();
+        void MakeTurn();
 
 
-    void NotifyGameEnded(bool isWinner);
+        void NotifyGameEnded(bool isWinner);
+    }
 }

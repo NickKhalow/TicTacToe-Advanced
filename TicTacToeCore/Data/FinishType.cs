@@ -1,8 +1,9 @@
-namespace TicTacToeCore.Data;
-
-public enum FinishType
+namespace TicTacToeCore.Data
 {
-    Draw,
-    WinX,
-    WinY
+    public enum FinishType
+    {
+        Draw,
+        WinX,
+        WinY
+    }
 }

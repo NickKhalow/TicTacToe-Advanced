@@ -1,20 +1,24 @@
-namespace TicTacToeCore.Data;
+using System.Collections.Generic;
 
-public struct GameData : IData
+
+namespace TicTacToeCore.Data
 {
-    public GameData(FieldData fieldData, IReadOnlyList<PlayerData> playerDatas, int currentAttackerPlayerId)
+    public struct GameData : IData
     {
-        FieldData = fieldData;
-        PlayerDatas = playerDatas;
-        CurrentAttackerPlayerId = currentAttackerPlayerId;
+        public GameData(FieldData fieldData, IReadOnlyList<PlayerData> playerDatas, int currentAttackerPlayerId)
+        {
+            FieldData = fieldData;
+            PlayerDatas = playerDatas;
+            CurrentAttackerPlayerId = currentAttackerPlayerId;
+        }
+
+
+        public FieldData FieldData { get; }
+
+
+        public IReadOnlyList<PlayerData> PlayerDatas { get; }
+
+
+        public int CurrentAttackerPlayerId { get; }
     }
-
-
-    public FieldData FieldData { get; }
-
-
-    public IReadOnlyList<PlayerData> PlayerDatas { get; }
-
-
-    public int CurrentAttackerPlayerId { get; }
 }

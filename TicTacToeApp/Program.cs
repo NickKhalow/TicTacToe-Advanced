@@ -1,7 +1,7 @@
-﻿using TicTacToe.Core.Field;
-using TicTacToe.Core.Player;
-using TicTacToeCore;
+﻿using TicTacToeCore;
 using TicTacToeCore.Data;
+using TicTacToeCore.Game;
+using TicTacToeCore.Player;
 
 
 public static class Program

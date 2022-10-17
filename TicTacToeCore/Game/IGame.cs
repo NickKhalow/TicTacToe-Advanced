@@ -1,18 +1,19 @@
-using TicTacToe.Core;
+using System;
 using TicTacToeCore.Data;
 
 
-namespace TicTacToeCore;
-
-public interface IGame : IDataDriven<GameData>
+namespace TicTacToeCore.Game
 {
-    event Action<FinishType> Finished;
+    public interface IGame : IDataDriven<GameData>
+    {
+        event Action<FinishType> Finished;
 
 
-    event Action<FieldData> FieldUpdated;
+        event Action<FieldData> FieldUpdated;
 
 
-    event Action<PlayerData> AttackerUpdated;
+        event Action<PlayerData> AttackerUpdated;
 
-    void Start();
+        void Start();
+    }
 }

@@ -1,153 +1,156 @@
-using TicTacToe.Core;
-using TicTacToe.Core.Field;
-using TicTacToe.Core.Player;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TicTacToeCore.Data;
+using TicTacToeCore.Field;
+using TicTacToeCore.Player;
 
 
-namespace TicTacToeCore;
-
-public class SimpleGame : IGame
+namespace TicTacToeCore.Game
 {
-    public event Action<FinishType>? Finished;
-
-
-    public event Action<FieldData>? FieldUpdated;
-
-
-    public event Action<PlayerData>? AttackerUpdated;
-
-
-    private readonly IList<IPlayer> playerList;
-    private readonly (IPlayer, IPlayer) players;
-    private readonly IField field;
-    private readonly IDictionary<IPlayer, (FinishType, CellState)> playerMapToCell;
-
-
-    private IPlayer CurrentTurner { get; set; }
-
-
-    private IPlayer FirstPlayer => players.Item1;
-
-
-    private IPlayer SecondPlayer => players.Item2;
-
-
-    public SimpleGame((IPlayer, IPlayer) players, int fieldSize = 3)
+    public class SimpleGame : IGame
     {
-        this.players = players;
-        playerList = new[] {FirstPlayer, SecondPlayer};
-        playerMapToCell = new Dictionary<IPlayer, (FinishType, CellState)>
+        public event Action<FinishType>? Finished;
+
+
+        public event Action<FieldData>? FieldUpdated;
+
+
+        public event Action<PlayerData>? AttackerUpdated;
+
+
+        private readonly IList<IPlayer> playerList;
+        private readonly (IPlayer, IPlayer) players;
+        private readonly IField field;
+        private readonly IDictionary<IPlayer, (FinishType, CellState)> playerMapToCell;
+
+
+        private IPlayer CurrentTurner { get; set; }
+
+
+        private IPlayer FirstPlayer => players.Item1;
+
+
+        private IPlayer SecondPlayer => players.Item2;
+
+
+        public SimpleGame((IPlayer, IPlayer) players, int fieldSize = 3)
         {
-            [FirstPlayer] = (FinishType.WinX, CellState.OwnedX),
-            [SecondPlayer] = (FinishType.WinY, CellState.OwnedY)
-        };
-        field = new SimpleField(fieldSize);
-
-        CurrentTurner = FirstPlayer;
-    }
-
-
-    private IPlayer NextPlayer()
-    {
-        return CurrentTurner == FirstPlayer ? SecondPlayer : FirstPlayer;
-    }
-
-
-    public void Start()
-    {
-        var moveWrappers = new List<MoveWrapper>();
-
-        foreach (var player in playerList)
-        {
-            var wrapper = new MoveWrapper(player, OnPlayerMove);
-            moveWrappers.Add(wrapper);
-        }
-
-        FinishType? finish;
-
-        while (!field.CheckGameFinished(out finish))
-        {
-            CurrentTurner.MakeTurn();
-            DrawField();
-            CurrentTurner = NextPlayer();
-        }
-
-        var ensuredFinish = (FinishType) finish!;
-
-        foreach (var moveWrapper in moveWrappers)
-        {
-            moveWrapper.Dispose();
-        }
-
-        foreach (var player in playerList)
-        {
-            player.NotifyGameEnded(playerMapToCell[player].Item1 == ensuredFinish);
-        }
-
-        Finished?.Invoke(ensuredFinish);
-    }
-
-
-    private void DrawField()
-    {
-        var array = field.ToArray();
-        for (int i = 0; i < array.GetLength(0); i++)
-        {
-            for (int j = 0; j < array.GetLength(1); j++)
+            this.players = players;
+            playerList = new[] {FirstPlayer, SecondPlayer};
+            playerMapToCell = new Dictionary<IPlayer, (FinishType, CellState)>
             {
-                Console.Write($"{array[i, j]}, ");
+                [FirstPlayer] = (FinishType.WinX, CellState.OwnedX),
+                [SecondPlayer] = (FinishType.WinY, CellState.OwnedY)
+            };
+            field = new SimpleField(fieldSize);
+
+            CurrentTurner = FirstPlayer;
+        }
+
+
+        private IPlayer NextPlayer()
+        {
+            return CurrentTurner == FirstPlayer ? SecondPlayer : FirstPlayer;
+        }
+
+
+        public void Start()
+        {
+            var moveWrappers = new List<MoveWrapper>();
+
+            foreach (var player in playerList)
+            {
+                var wrapper = new MoveWrapper(player, OnPlayerMove);
+                moveWrappers.Add(wrapper);
             }
 
-            Console.Write('\n');
+            FinishType? finish;
+
+            while (!field.CheckGameFinished(out finish))
+            {
+                CurrentTurner.MakeTurn();
+                DrawField();
+                CurrentTurner = NextPlayer();
+            }
+
+            var ensuredFinish = (FinishType) finish!;
+
+            foreach (var moveWrapper in moveWrappers)
+            {
+                moveWrapper.Dispose();
+            }
+
+            foreach (var player in playerList)
+            {
+                player.NotifyGameEnded(playerMapToCell[player].Item1 == ensuredFinish);
+            }
+
+            Finished?.Invoke(ensuredFinish);
         }
-    }
 
 
-    private void OnPlayerMove(IPlayer player, Position position)
-    {
-        if (player == CurrentTurner)
+        private void DrawField()
         {
-            field.MakeTurn(playerMapToCell[player].Item2, position);
+            var array = field.ToArray();
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                for (int j = 0; j < array.GetLength(1); j++)
+                {
+                    Console.Write($"{array[i, j]}, ");
+                }
+
+                Console.Write('\n');
+            }
         }
-        else
+
+
+        private void OnPlayerMove(IPlayer player, Position position)
         {
-            Console.WriteLine($"{player.Name} is not current turner");
+            if (player == CurrentTurner)
+            {
+                field.MakeTurn(playerMapToCell[player].Item2, position);
+            }
+            else
+            {
+                Console.WriteLine($"{player.Name} is not current turner");
+            }
         }
-    }
 
 
-    private class MoveWrapper : IDisposable
-    {
-        private readonly IPlayer player;
-        private readonly Action<IPlayer, Position> onPlayerMove;
-
-
-        public MoveWrapper(IPlayer player, Action<IPlayer, Position> onPlayerMove)
+        private class MoveWrapper : IDisposable
         {
-            this.player = player;
-            this.onPlayerMove = onPlayerMove;
-            player.RequestTurnAt += ReceiveMove;
+            private readonly IPlayer player;
+            private readonly Action<IPlayer, Position> onPlayerMove;
+
+
+            public MoveWrapper(IPlayer player, Action<IPlayer, Position> onPlayerMove)
+            {
+                this.player = player;
+                this.onPlayerMove = onPlayerMove;
+                player.RequestTurnAt += ReceiveMove;
+            }
+
+
+            public void Dispose()
+            {
+                player.RequestTurnAt -= ReceiveMove;
+            }
+
+
+            private void ReceiveMove(Position position)
+            {
+                onPlayerMove(player, position);
+            }
         }
 
 
-        public void Dispose()
+        public GameData GetData()
         {
-            player.RequestTurnAt -= ReceiveMove;
+            return new GameData(
+                field.GetData(),
+                playerList.Select(p => p.GetData()).ToList(),
+                playerList.IndexOf(CurrentTurner));
         }
-
-
-        private void ReceiveMove(Position position)
-        {
-            onPlayerMove(player, position);
-        }
-    }
-
-
-    public GameData GetData()
-    {
-        return new GameData(
-            field.GetData(),
-            playerList.Select(p => p.GetData()).ToList(),
-            playerList.IndexOf(CurrentTurner));
     }
 }
