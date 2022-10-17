@@ -24,6 +24,10 @@ namespace TicTacToeCore.Game
         private readonly IField field;
         private readonly IDictionary<IPlayer, (FinishType, CellState)> playerMapToCell;
 
+
+        private bool IsFinished { get; set; }
+
+
         private IPlayer CurrentTurner { get; set; }
 
 
@@ -86,6 +90,7 @@ namespace TicTacToeCore.Game
                 player.NotifyGameEnded(playerMapToCell[player].Item1 == ensuredFinish);
             }
 
+            IsFinished = true;
             Finished?.Invoke(ensuredFinish);
         }
 
@@ -100,6 +105,16 @@ namespace TicTacToeCore.Game
             {
                 Console.WriteLine($"{player.Name} is not current turner");
             }
+        }
+
+
+        public GameData GetData()
+        {
+            return new GameData(
+                field.GetData(),
+                playerList.Select(p => p.GetData()).ToList(),
+                playerList.IndexOf(CurrentTurner),
+                IsFinished);
         }
 
 
@@ -127,15 +142,6 @@ namespace TicTacToeCore.Game
             {
                 onPlayerMove(player, position);
             }
-        }
-
-
-        public GameData GetData()
-        {
-            return new GameData(
-                field.GetData(),
-                playerList.Select(p => p.GetData()).ToList(),
-                playerList.IndexOf(CurrentTurner));
         }
     }
 }

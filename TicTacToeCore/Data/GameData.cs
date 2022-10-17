@@ -5,11 +5,13 @@ namespace TicTacToeCore.Data
 {
     public struct GameData : IData
     {
-        public GameData(FieldData fieldData, IReadOnlyList<PlayerData> playerDatas, int currentAttackerPlayerId)
+        public GameData(FieldData fieldData, IReadOnlyList<PlayerData> playerDatas, int currentAttackerPlayerId,
+            bool isFinished)
         {
             FieldData = fieldData;
             PlayerDatas = playerDatas;
             CurrentAttackerPlayerId = currentAttackerPlayerId;
+            IsFinished = isFinished;
         }
 
 
@@ -20,5 +22,8 @@ namespace TicTacToeCore.Data
 
 
         public int CurrentAttackerPlayerId { get; }
+
+
+        public bool IsFinished { get; }
     }
 }
