@@ -24,7 +24,6 @@ namespace TicTacToeCore.Game
         private readonly IField field;
         private readonly IDictionary<IPlayer, (FinishType, CellState)> playerMapToCell;
 
-
         private IPlayer CurrentTurner { get; set; }
 
 
@@ -70,8 +69,9 @@ namespace TicTacToeCore.Game
             while (!field.CheckGameFinished(out finish))
             {
                 CurrentTurner.MakeTurn();
-                DrawField();
+                FieldUpdated?.Invoke(field.GetData());
                 CurrentTurner = NextPlayer();
+                AttackerUpdated?.Invoke(CurrentTurner.GetData());
             }
 
             var ensuredFinish = (FinishType) finish!;
@@ -87,21 +87,6 @@ namespace TicTacToeCore.Game
             }
 
             Finished?.Invoke(ensuredFinish);
-        }
-
-
-        private void DrawField()
-        {
-            var array = field.ToArray();
-            for (int i = 0; i < array.GetLength(0); i++)
-            {
-                for (int j = 0; j < array.GetLength(1); j++)
-                {
-                    Console.Write($"{array[i, j]}, ");
-                }
-
-                Console.Write('\n');
-            }
         }
 
 

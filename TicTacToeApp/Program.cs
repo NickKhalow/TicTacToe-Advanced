@@ -11,9 +11,25 @@ public static class Program
         IGame game = new SimpleGame(new ValueTuple<IPlayer, IPlayer>(
             new SimpleConsolePlayer("Jack", 'X'),
             new SimpleConsolePlayer("Adam", 'O')));
-        
+
+        game.FieldUpdated += GameOnFieldUpdated;
         game.Finished += GameOnFinished;
         game.Start();
+    }
+
+
+    private static void GameOnFieldUpdated(FieldData obj)
+    {
+        var array = obj.Cells;
+        for (int i = 0; i < array.GetLength(0); i++)
+        {
+            for (int j = 0; j < array.GetLength(1); j++)
+            {
+                Console.Write($"{array[i, j]}, ");
+            }
+
+            Console.Write('\n');
+        }
     }
 
 
