@@ -4,7 +4,7 @@ using TicTacToeCore.Data;
 
 namespace TicTacToe.Core.Field;
 
-public interface IField
+public interface IField : IDataDriven<FieldData>
 {
     int Size { get; }
 

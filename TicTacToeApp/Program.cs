@@ -9,8 +9,8 @@ public static class Program
     public static void Main(string[] args)
     {
         IGame game = new SimpleGame(new ValueTuple<IPlayer, IPlayer>(
-            new SimpleConsolePlayer("Jack"),
-            new SimpleConsolePlayer("Adam")));
+            new SimpleConsolePlayer("Jack", 'X'),
+            new SimpleConsolePlayer("Adam", 'O')));
         
         game.Finished += GameOnFinished;
         game.Start();

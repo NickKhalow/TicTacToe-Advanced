@@ -156,4 +156,10 @@ public class SimpleField : IField
         Array.Copy(cells, output, Size * Size);
         return output;
     }
+
+
+    public FieldData GetData()
+    {
+        return new FieldData(ToArray());
+    }
 }

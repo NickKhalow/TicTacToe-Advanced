@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using TicTacToe.Core;
 using TicTacToe.Core.Field;
 using TicTacToe.Core.Player;
@@ -12,7 +11,13 @@ public class SimpleGame : IGame
     public event Action<FinishType>? Finished;
 
 
-    private readonly IPlayer[] playerList;
+    public event Action<FieldData>? FieldUpdated;
+
+
+    public event Action<PlayerData>? AttackerUpdated;
+
+
+    private readonly IList<IPlayer> playerList;
     private readonly (IPlayer, IPlayer) players;
     private readonly IField field;
     private readonly IDictionary<IPlayer, (FinishType, CellState)> playerMapToCell;
@@ -62,7 +67,7 @@ public class SimpleGame : IGame
 
         while (!field.CheckGameFinished(out finish))
         {
-            CurrentTurner.NotifyTimeToTurn();
+            CurrentTurner.MakeTurn();
             DrawField();
             CurrentTurner = NextPlayer();
         }
@@ -135,5 +140,14 @@ public class SimpleGame : IGame
         {
             onPlayerMove(player, position);
         }
+    }
+
+
+    public GameData GetData()
+    {
+        return new GameData(
+            field.GetData(),
+            playerList.Select(p => p.GetData()).ToList(),
+            playerList.IndexOf(CurrentTurner));
     }
 }

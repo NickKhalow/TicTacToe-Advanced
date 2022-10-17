@@ -1,6 +1,9 @@
+using TicTacToeCore.Data;
+
+
 namespace TicTacToeCore;
 
-public struct Position
+public struct Position : IData
 {
     public int X { get; }
 
